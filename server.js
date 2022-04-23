@@ -16,6 +16,10 @@ app.get('/', (req, res) => {
     })
 })
 
+// CONTROLLERS
+const bandsController = require('./controllers/bands_controller.js')
+app.use('/bands', bandsController) // use bands_controller.js anytime a URL starts with /bands
+
 // LISTEN
 app.listen(process.env.PORT, () => {
     console.log(`🎸 Rockin' on port: ${process.env.PORT}`)

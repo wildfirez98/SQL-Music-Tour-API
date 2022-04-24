@@ -17,8 +17,22 @@ app.get('/', (req, res) => {
 })
 
 // CONTROLLERS
+
+// Bands Controller
+
 const bandsController = require('./controllers/bands_controller.js')
 app.use('/bands', bandsController) // use bands_controller.js anytime a URL starts with /bands
+
+// Events Controller
+
+const eventsController = require('./controllers/events_controller.js')
+app.use('/events', eventsController) // use events_controller.js anytime a URL starts with /events
+
+// Stages Controller
+
+const stagesController = require('./controllers/stages_controller.js')
+app.use('/stages', stagesController) // use stages_controller.js anytime a URL starts with /stages
+
 
 // LISTEN
 app.listen(process.env.PORT, () => {

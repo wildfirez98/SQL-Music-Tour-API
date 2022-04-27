@@ -1,11 +1,12 @@
 // DEPENDENCIES
 const { Op } = require('sequelize')
 
+
 // REMEMBER - Router comes from Express Framework for Node.js
 const bands = require('express').Router() // Create the router and save to variable named bands 
 
 const db = require('../models') // Require models folder and save to variable 'db'
-const { Band } = db // Access database models thru db variable. Example, db.Band would access band.js
+const { Band, Meet_greet, Event, Set_time } = db // Access database models thru db variable. Example, db.Band would access band.js
 
 // ROUTES
 
@@ -24,11 +25,32 @@ bands.get('/', async (req, res) => {
     }
 })
 
-// Route 2: "/:id" - GET 
-bands.get('/:id', async (req, res) => {
+// Route 2: "/:id" - GET
+// Updated 4/25 to search by /:name instead of /:id 
+bands.get('/:name', async (req, res) => {
     try {
         const foundBand = await Band.findOne({
-            where: { band_id: req.params.id }
+            where: { name: req.params.name },
+            include: [
+                { 
+                    model: Meet_greet, 
+                    as: "meet_greets",
+                    include: { 
+                        model: Event, 
+                        as: "event",
+                        where: { name: { [Op.like]: `%${req.query.event ? req.query.event : ''}%` } }
+                    }
+                },
+                {
+                    model: Set_time,
+                    as: "set_times",
+                    include: { 
+                        model: Event, 
+                        as: "event", 
+                        where: { name: { [Op.like]: `%${req.query.event ? req.query.event : ''}%` } }
+                    }
+                }
+            ] 
         })
         res.status(200).json(foundBand)    
     } catch (error) {
